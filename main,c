@@ -292,14 +292,67 @@ void tacheRechereche(){
         break;
     }
 }
-
+// Taches completes et incompletes. //
+void tacheCompletationStatus(){
+  int complete = 0, incomplete = 0 , i ;
+  for(i=0 ;i<nb_taches ; i++){
+    if(strcmp(tache[i].status,"finalise")== 0){
+        complete++;
+    }
+    else if(strcmp(tache[i].status,"en cours")== 0 || strcmp(tache[i].status,"a realiser")== 0){
+        incomplete ++ ;
+    }
+  }
+  printf("Nombre de taches completes : %d\n", complete);
+  printf("Nombre de taches incompletes : %d\n", incomplete);
+}
+// Afficher Jours Restants //
+void afficherJoursRestants(){
+   int i , joursRestants ;
+   time_t t = time(NULL);
+   struct tm dt = *localtime(&t);
+   int j = dt.tm_mday;
+   int m = dt.tm_mon+1;
+   int a = dt.tm_year+1900;
+   printf("Nombre de jours restants jusqu'au delai de chaque tache :\n");
+   for(i=0 ;i<nb_taches; i++){
+     int joursRestants = (tache[i].deadLine.annee - a) * 365 + (tache[i].deadLine.mois - m) * 30 + (tache[i].deadLine.jour-j);
+     printf("Identifiant: %d\n", tache[i].identifiant);
+     printf("Titre: %s\n", tache[i].titre);
+     printf("Description: %s\n", tache[i].description);
+     printf("Deadline: %d/%d/%d\n", tache[i].deadLine.jour, tache[i].deadLine.mois, tache[i].deadLine.annee);
+     printf("Jours restants: %d\n", joursRestants);
+     printf("Statut: %s\n", tache[i].status);
+     printf("---------------------------------\n");
+   }
+}
 // Taches Statistiques //
 void tachesStatistiques(){
-  printf("Choisissez une option parmi les suivantes :");
-  printf("1. Afficher le nombre total de taches");
-  printf("2. Afficher le nombre de t�ches compl�tes et incompletes");
-  printf("3. Afficher le nombre de jours restants jusqu'au d elai de chaque tache.");
-
+  if(nb_taches==0){
+    printf("Aucune tache pour affiches les statistiques.\n");
+    return ;
+  }
+  int choix ;
+  printf("Statistiques des Taches :\n");
+  printf("1. Afficher le nombre total de taches\n");
+  printf("2. Afficher le nombre de taches completes et incompletes\n");
+  printf("3. Afficher le nombre de jours restants jusqu'au d elai de chaque tache.\n");
+  printf("Choix: ");
+  scanf("%d",&choix);
+  switch (choix){
+     case 1:  system("cls");
+              printf("le nombre total des taches : %d\n",nb_taches);
+              break ;
+     case 2:  system("cls");
+              tacheCompletationStatus();
+              break ;
+     case 3:  system("cls");
+              afficherJoursRestants();
+              break;
+     default:   system("cls");
+                printf("Choix invalide.\n");
+                break;
+  }
 }
 
 //  Main Programme Menu //
