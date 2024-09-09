@@ -9,7 +9,13 @@ int nb_taches = 0;
 
 // Struct //
 typedef struct {
-    int jour, annee, mois;
+  char nom [50];
+  char penom [50];
+  char email [100];
+}Collaborateur ;
+
+typedef struct {
+    int jour, mois , annee ;
 } Deadline;
 
 typedef struct  {
@@ -17,10 +23,15 @@ typedef struct  {
     char titre[50];
     char description[250];
     Deadline deadLine;
+    Deadline dateCreation ;
+    Collaborateur callaborateurs[10];
+    int nombreCollaborateurs ;
     char status[50];
 } taches;
 
 taches tache[MAX_TACHE];
+// Ajoute Collaborateurs //
+
 
 // Tache Ajoute Seul //
 void tacheAjouteSeul() {
@@ -34,6 +45,7 @@ void tacheAjouteSeul() {
         scanf(" %[^\n]", tache[nb_taches].description);
 
         printf("Deadline de la tache (JJ MM AAAA):\n");
+
         do {
             printf("Jour : ");
             scanf("%d", &tache[nb_taches].deadLine.jour);
@@ -42,6 +54,12 @@ void tacheAjouteSeul() {
             printf("Annee : ");
             scanf("%d", &tache[nb_taches].deadLine.annee);
         } while (tache[nb_taches].deadLine.annee < 0);
+
+        time_t t = time(NULL);
+        struct tm dt = *localtime(&t);
+        tache[nb_taches].dateCreation.jour = dt.tm_mday;
+        tache[nb_taches].dateCreation.mois = dt.tm_mon + 1 ;
+        tache[nb_taches].dateCreation.annee = dt.tm_year + 1900 ;
 
         printf("Statut (a realiser / en cours / finalisee): ");
         scanf(" %[^\n]", tache[nb_taches].status);
@@ -124,7 +142,7 @@ void afficheTaches() {
     switch (choix){
       case 1: triAlphabetique(); break ;
       case 2: trideadline(); break ;
-      case 3: triDeadline3j(); break ;
+      case 3: triDeadline3j(); break ; return ;
       default :
         printf("Choix invalide.\n");
         return;
@@ -135,6 +153,7 @@ void afficheTaches() {
        printf("Titre: %s\n", tache[i].titre);
        printf("Description: %s\n", tache[i].description);
        printf("Deadline: %d/%d/%d\n", tache[i].deadLine.jour, tache[i].deadLine.mois, tache[i].deadLine.annee);
+       printf("Date de Creation : %d/%d/%d\n",tache[i].dateCreation.jour,tache[i].dateCreation.mois,tache[i].dateCreation.annee);
        printf("Statut: %s\n", tache[i].status);
        printf("----------------------------\n");
     }
@@ -226,6 +245,7 @@ void triDeadline3j(){
      printf("Titre: %s\n", tache[i].titre);
      printf("Description: %s\n", tache[i].description);
      printf("Deadline: %d/%d/%d\n", tache[i].deadLine.jour, tache[i].deadLine.mois, tache[i].deadLine.annee);
+     printf("Date de Creation : %d/%d/%d\n",tache[i].dateCreation.jour,tache[i].dateCreation.mois,tache[i].dateCreation.annee);
      printf("Statut: %s\n", tache[i].status);
      printf("---------------------------------\n");
    }
@@ -242,6 +262,7 @@ void tacheRechereche(){
     printf("Rechercher une tache par :\n");
     printf("1. Identifiant\n");
     printf("2. Titre\n");
+    printf("0. return\n");
     printf("Choix : ");
     scanf("%d", &choix);
     switch (choix){
@@ -259,6 +280,7 @@ void tacheRechereche(){
                printf("Titre: %s\n", tache[i].titre);
                printf("Description: %s\n", tache[i].description);
                printf("Deadline: %d/%d/%d\n", tache[i].deadLine.jour, tache[i].deadLine.mois, tache[i].deadLine.annee);
+               printf("Date de Creation : %d/%d/%d\n",tache[i].dateCreation.jour,tache[i].dateCreation.mois,tache[i].dateCreation.annee);
                printf("Statut: %s\n", tache[i].status);
                found = 1;
                break;
@@ -278,6 +300,7 @@ void tacheRechereche(){
                printf("Titre: %s\n", tache[i].titre);
                printf("Description: %s\n", tache[i].description);
                printf("Deadline: %d/%d/%d\n", tache[i].deadLine.jour, tache[i].deadLine.mois, tache[i].deadLine.annee);
+               printf("Date de Creation : %d/%d/%d\n",tache[i].dateCreation.jour,tache[i].dateCreation.mois,tache[i].dateCreation.annee);
                printf("Statut: %s\n", tache[i].status);
                found = 1;
                break;
@@ -287,6 +310,8 @@ void tacheRechereche(){
             printf("Aucune tache trouvee avec le titre '%s'.\n", titre);
          }
          break ;
+      case 0: system("cls");
+              main();
       default:
         printf("Choix invalide.\n");
         break;
@@ -321,6 +346,7 @@ void afficherJoursRestants(){
      printf("Titre: %s\n", tache[i].titre);
      printf("Description: %s\n", tache[i].description);
      printf("Deadline: %d/%d/%d\n", tache[i].deadLine.jour, tache[i].deadLine.mois, tache[i].deadLine.annee);
+     printf("Date de Creation : %d/%d/%d\n",tache[i].dateCreation.jour,tache[i].dateCreation.mois,tache[i].dateCreation.annee);
      printf("Jours restants: %d\n", joursRestants);
      printf("Statut: %s\n", tache[i].status);
      printf("---------------------------------\n");
@@ -357,6 +383,7 @@ void tachesStatistiques(){
 
 //  Main Programme Menu //
 void afficherMenu() {
+    system("color 3f");
     printf("*******     Youcode Sas Todo Program    **********\n\n");
     printf("1. Ajouter une tache\n");
     printf("2. Ajouter plusieurs taches\n");
